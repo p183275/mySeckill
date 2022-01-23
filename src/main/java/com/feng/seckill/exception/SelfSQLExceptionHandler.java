@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 /**
  * @author : pcf
  * @date : 2022/1/23 17:39
- * SQL 的错误
+ * SQL的错误
  */
 @RestControllerAdvice
 public class SelfSQLExceptionHandler {

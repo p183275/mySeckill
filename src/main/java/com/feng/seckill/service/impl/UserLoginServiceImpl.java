@@ -85,7 +85,6 @@ public class UserLoginServiceImpl extends ServiceImpl<UserLoginMapper, UserPO> i
         userPO.setRoleName(RoleConstant.RoleEnum.DEFAULT_ROLE.getMsg());
         // 显示
         userPO.setShowStatus(MyBatisConstant.LogicDelete.NOT_DELETE.getCode());
-
         // 保存
         try {
             userLoginMapper.insert(userPO);

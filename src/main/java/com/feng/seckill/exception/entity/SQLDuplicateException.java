@@ -6,6 +6,7 @@ package com.feng.seckill.exception.entity;
  * SQL重复添加异常
  */
 public class SQLDuplicateException extends RuntimeException{
+
     public SQLDuplicateException() {
         super();
     }

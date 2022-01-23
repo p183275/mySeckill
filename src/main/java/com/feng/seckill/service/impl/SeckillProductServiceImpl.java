@@ -357,7 +357,6 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
             SeckillResultPO seckillResultPO = new SeckillResultPO();
             BeanUtils.copyProperties(mySeckillVO, seckillResultPO);
             seckillResultPO.setCreateDate(new Date());
-
             // 存入数据
             try {
                 seckillResultMapper.insert(seckillResultPO);
