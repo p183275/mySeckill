@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * 异常处理类
  */
 @RestControllerAdvice
-public class AllException {
+public class AllExceptionHandler {
 
     @ExceptionHandler(value = TokenException.class)
     public CommonResult<String> resultTokenError(TokenException exception){

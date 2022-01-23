@@ -6,19 +6,23 @@ import com.feng.seckill.entitys.constant.*;
 import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.UserLoginVO;
 import com.feng.seckill.entitys.vo.UserRegisterVO;
+import com.feng.seckill.exception.entity.SQLDuplicateException;
 import com.feng.seckill.mapper.UserLoginMapper;
 import com.feng.seckill.service.UserLoginService;
 import com.feng.seckill.util.JWTUtils;
 import com.feng.seckill.util.RegisterUtil;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -83,7 +87,11 @@ public class UserLoginServiceImpl extends ServiceImpl<UserLoginMapper, UserPO> i
         userPO.setShowStatus(MyBatisConstant.LogicDelete.NOT_DELETE.getCode());
 
         // 保存
-        userLoginMapper.insert(userPO);
+        try {
+            userLoginMapper.insert(userPO);
+        }catch (DuplicateKeyException e){
+            throw new SQLDuplicateException("账号已存在");
+        }
     }
 
     /**

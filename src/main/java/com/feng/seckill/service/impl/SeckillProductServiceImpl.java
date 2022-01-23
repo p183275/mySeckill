@@ -14,6 +14,7 @@ import com.feng.seckill.entitys.po.SeckillProductPO;
 import com.feng.seckill.entitys.po.SeckillResultPO;
 import com.feng.seckill.entitys.po.SeckillRulePO;
 import com.feng.seckill.entitys.vo.*;
+import com.feng.seckill.exception.entity.SQLDuplicateException;
 import com.feng.seckill.mapper.SeckillProductMapper;
 import com.feng.seckill.mapper.SeckillResultMapper;
 import com.feng.seckill.service.SeckillProductService;
@@ -21,6 +22,7 @@ import com.feng.seckill.util.ProductUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -355,9 +357,13 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
             SeckillResultPO seckillResultPO = new SeckillResultPO();
             BeanUtils.copyProperties(mySeckillVO, seckillResultPO);
             seckillResultPO.setCreateDate(new Date());
+
             // 存入数据
-            // 测试速度变化
-            seckillResultMapper.insert(seckillResultPO);
+            try {
+                seckillResultMapper.insert(seckillResultPO);
+            }catch (DuplicateKeyException e){
+                throw new SQLDuplicateException("不能重复购买");
+            }
 
             // 如果数量不为0
             // redis中数量自减
