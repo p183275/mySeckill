@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.seckill.mapper.SeckillProductMapper">
+    <resultMap id="SeckillProductVOMap" type="com.feng.seckill.entitys.vo.SeckillProductVO">
+        <id property="productId" column="product_id" jdbcType="BIGINT"/>
+        <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="photoUrl" column="photo_url" jdbcType="VARCHAR"/>
+        <result property="productComment" column="product_comment" jdbcType="VARCHAR"/>
+        <result property="productNumber" column="product_number" jdbcType="INTEGER"/>
+        <result property="productPrice" column="product_price" jdbcType="INTEGER"/>
+        <result property="productStatus" column="product_status" jdbcType="VARCHAR"/>
+        <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="selectPageVo" resultType="com.feng.seckill.entitys.vo.SeckillProductVO">
+        SELECT product_id, product_name, url, photo_url, product_comment, product_number, product_price, product_status,
+               begin_time, end_time, create_date
+        FROM t_seckill_product
+        WHERE show_status = 0
+    </select>
+    <update id="letProductionZero">
+        UPDATE t_seckill_product
+        SET product_number = 0
+        WHERE product_id = #{productId}
+    </update>
+</mapper>
