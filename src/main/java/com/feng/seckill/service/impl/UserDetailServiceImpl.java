@@ -45,7 +45,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         BeanUtils.copyProperties(userPO, securityUser);
         BeanUtils.copyProperties(userPO, userVO);
 
-        // TODO 查询用户是否有资格
+        // 查询用户是否有资格
         boolean permission = seckillRuleService.getPermissionByUserId(userPO.getUserId());
         userVO.setHasPermission(permission);
 

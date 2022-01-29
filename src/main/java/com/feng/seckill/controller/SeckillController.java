@@ -10,8 +10,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -59,9 +61,10 @@ public class SeckillController {
             @ApiParam(value = "动态链接，从链接中获取", name = "dynamicUrl")
                 @PathVariable(value = "dynamicUrl2") String dynamicUrl2,
             @ApiParam(value = "秒杀信息封装", name = "mySeckillVO")
-                @RequestBody MySeckillVO mySeckillVO){
+                @RequestBody MySeckillVO mySeckillVO,
+            HttpServletRequest request){
 
-        String result = seckillProductService.doSeckill(dynamicUrl1, dynamicUrl2, mySeckillVO);
+        String result = seckillProductService.doSeckill(dynamicUrl1, dynamicUrl2, mySeckillVO, request);
         return new CommonResult<>(200, "成功", result);
     }
 

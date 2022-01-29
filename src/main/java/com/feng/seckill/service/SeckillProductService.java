@@ -1,12 +1,12 @@
 package com.feng.seckill.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.feng.seckill.entitys.po.SeckillProductPO;
-import com.feng.seckill.entitys.po.SeckillRulePO;
 import com.feng.seckill.entitys.vo.*;
+import org.springframework.http.HttpRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +63,8 @@ public interface SeckillProductService extends IService<SeckillProductPO> {
      * @param dynamicUrl1 动态链接1
      * @param dynamicUrl12 动态链接1
      * @param mySeckillVO 秒杀信息封装
+     * @param request 请求
      * @return 秒杀结果
      */
-    String doSeckill(String dynamicUrl1, String dynamicUrl12, MySeckillVO mySeckillVO);
+    String doSeckill(String dynamicUrl1, String dynamicUrl12, MySeckillVO mySeckillVO, HttpServletRequest request);
 }

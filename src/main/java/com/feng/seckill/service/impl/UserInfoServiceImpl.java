@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.feng.seckill.entitys.constant.ExceptionConstant;
+import com.feng.seckill.entitys.po.RolePO;
 import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.HelpPage;
 import com.feng.seckill.entitys.vo.UserVO;
+import com.feng.seckill.mapper.RoleMapper;
 import com.feng.seckill.mapper.UserInfoMapper;
+import com.feng.seckill.service.RoleService;
 import com.feng.seckill.service.UserInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserPO> imp
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private RoleMapper roleMapper;
 
     /**
      * @param key 关键字
@@ -86,7 +91,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserPO> imp
 
         // 判断角色id是否为空
         if (userPO.getRoleId() != null){
-            // TODO 查到角色名称并放入对象中
+            RolePO rolePO = roleMapper.selectById(userPO.getRoleId());
+            // 放入角色属性
+            userPO.setRoleName(rolePO.getRoleName());
         }
 
         // 修改

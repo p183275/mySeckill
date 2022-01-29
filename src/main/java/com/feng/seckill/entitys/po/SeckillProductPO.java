@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -24,6 +25,7 @@ public class SeckillProductPO {
     private Integer productNumber; // 产品数量
     private Integer productPrice; // 产品价格
     private String productStatus; // 产品状态（未开始 正在进行 已结束）
+    private BigDecimal worth; // 产品净值
     @TableLogic
     private String showStatus;
     private Date beginTime; // 开始时间

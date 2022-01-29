@@ -11,18 +11,14 @@ import com.feng.seckill.mapper.UserLoginMapper;
 import com.feng.seckill.service.UserLoginService;
 import com.feng.seckill.util.JWTUtils;
 import com.feng.seckill.util.RegisterUtil;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -108,6 +104,8 @@ public class UserLoginServiceImpl extends ServiceImpl<UserLoginMapper, UserPO> i
         // 判断电话号码是否格式错误
         if (phoneNumber.length() - 2 != 11 || !"1".equals(phoneNumber.substring(0, 1)))
             throw new RuntimeException(ExceptionConstant.PHONE_NUMBER_NOT_ILLEGAL_EXCEPTION);
+
+        // 除去/r
         phoneNumber = phoneNumber.substring(0, 11);
 
         // 生成验证码

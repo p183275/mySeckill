@@ -1,6 +1,7 @@
 package com.feng.seckill.exception;
 
 import com.feng.seckill.entitys.result.CommonResult;
+import com.feng.seckill.exception.entity.SQLDuplicateException;
 import com.feng.seckill.exception.entity.TokenException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,6 +13,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 public class AllExceptionHandler {
+
+    @ExceptionHandler(value = SQLDuplicateException.class)
+    public CommonResult<String> resolve(SQLDuplicateException e){
+        e.printStackTrace();
+        return new CommonResult<>(441, e.getMessage());
+    }
 
     @ExceptionHandler(value = TokenException.class)
     public CommonResult<String> resultTokenError(TokenException exception){

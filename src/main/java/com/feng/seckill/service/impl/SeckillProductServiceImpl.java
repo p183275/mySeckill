@@ -2,6 +2,7 @@ package com.feng.seckill.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,15 +10,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.feng.seckill.entitys.constant.ExceptionConstant;
 import com.feng.seckill.entitys.constant.RedisConstant;
 import com.feng.seckill.entitys.constant.SeckillProductConstant;
-import com.feng.seckill.entitys.constant.SeckillRuleConstant;
 import com.feng.seckill.entitys.po.SeckillProductPO;
 import com.feng.seckill.entitys.po.SeckillResultPO;
-import com.feng.seckill.entitys.po.SeckillRulePO;
 import com.feng.seckill.entitys.vo.*;
 import com.feng.seckill.exception.entity.SQLDuplicateException;
 import com.feng.seckill.mapper.SeckillProductMapper;
 import com.feng.seckill.mapper.SeckillResultMapper;
 import com.feng.seckill.service.SeckillProductService;
+import com.feng.seckill.util.JWTUtils;
 import com.feng.seckill.util.ProductUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -112,6 +113,8 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
             redisTemplate.opsForValue().set(RedisConstant.PRODUCTION_NUMBER
                     + seckillProductPO.getProductId(), String.valueOf(productNumber));
         }
+        // 删除产品信息
+        redisTemplate.delete(RedisConstant.PRODUCTIONS);
 
         // 更新
         seckillProductMapper.updateById(seckillProductPO);
@@ -225,29 +228,28 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
                             TimeUnit.MINUTES);
                     return seckillProductPOS;
                 }
-
                 // 如果不为空
                 return JSON.parseObject(stringOProductions2,
                         new TypeReference<List<SeckillProductPO>>() {});
             }
         }
-
         // 如果不为空
         return JSON.parseObject(stringOProductions,
                 new TypeReference<List<SeckillProductPO>>() {});
     }
 
     /**
-     * TODO 吞吐量 90/sec 需要改进
      * 进行秒杀(事务方法)
      * @param dynamicUrl1 动态链接1
      * @param dynamicUrl12 动态链接1
      * @param mySeckillVO 秒杀信息封装
+     * @param request 请求
      * @return 秒杀结果
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
-    public String doSeckill(String dynamicUrl1, String dynamicUrl12, MySeckillVO mySeckillVO) {
+    public String doSeckill(String dynamicUrl1, String dynamicUrl12, MySeckillVO mySeckillVO,
+                            HttpServletRequest request) {
 
         // 判断动态链接是否为空
         if (dynamicUrl1 == null || dynamicUrl12 == null)
@@ -262,7 +264,7 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
             throw new RuntimeException(SeckillProductConstant.URL_FILED);
 
         // 进行产品秒杀
-        boolean doingSeckill = doingSeckill(operations, mySeckillVO);
+        boolean doingSeckill = doingSeckill(operations, mySeckillVO, request);
 
         // 抢购成功
         if (doingSeckill){
@@ -272,8 +274,6 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
         // 库存已空
         return SeckillProductConstant.PRODUCTION_FILED;
     }
-
-    // 将活动url放入redis
 
     /****************************************************************************************************
      ***********************************************  方法  **********************************************
@@ -333,7 +333,8 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
     }
 
     // 进行秒杀
-    private boolean doingSeckill(ValueOperations<String, String> operations, MySeckillVO mySeckillVO) {
+    private boolean doingSeckill(ValueOperations<String, String> operations, MySeckillVO mySeckillVO,
+                                 HttpServletRequest request) {
 
         // 拿到产品id
         Long productId = mySeckillVO.getProductId();
@@ -353,10 +354,22 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
                 return false;
             }
 
+
             // 数据库中存入
             SeckillResultPO seckillResultPO = new SeckillResultPO();
             BeanUtils.copyProperties(mySeckillVO, seckillResultPO);
             seckillResultPO.setCreateDate(new Date());
+
+            // 拿到当前用户id 和 姓名
+            String token = request.getHeader("token");
+            DecodedJWT verify = JWTUtils.verify(token);
+            String userId = verify.getClaim("userId").asString();
+            String userName = verify.getClaim("userName").asString();
+
+            // 用户id和姓名放入对象
+            seckillResultPO.setUserId(Long.parseLong(userId));
+            seckillResultPO.setUserName(userName);
+
             // 存入数据
             try {
                 seckillResultMapper.insert(seckillResultPO);

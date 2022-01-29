@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -25,6 +26,8 @@ public class AddSeckillProductVO {
     private String productComment;
     @ApiModelProperty(value = "产品数量", example = "500")
     private Integer productNumber;
+    @ApiModelProperty(value = "产品净值", example = "4.2354")
+    private BigDecimal worth;
     @ApiModelProperty(value = "产品价格", example = "10000")
     private Integer productPrice;
     @ApiModelProperty(value = "活动开始时间")
