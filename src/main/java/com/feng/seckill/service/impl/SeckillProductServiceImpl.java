@@ -243,7 +243,7 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
      * @param dynamicUrl1 动态链接1
      * @param dynamicUrl12 动态链接1
      * @param mySeckillVO 秒杀信息封装
-     * @param request 请求
+     * @param request 用户请求
      * @return 秒杀结果
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
