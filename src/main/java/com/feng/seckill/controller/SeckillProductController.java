@@ -27,6 +27,14 @@ public class SeckillProductController {
     @Autowired
     private SeckillProductService seckillProductService;
 
+    @GetMapping(value = "/reflash/production/number")
+    @ApiOperation(value = "刷新产品数量", httpMethod = "GET")
+    public CommonResult<String> reflashProductionNumber(){
+
+        seckillProductService.reflashProductionNumber();
+        return new CommonResult<>(200, "成功");
+    }
+
     @GetMapping(value = "/get/all/info")
     @ApiOperation(value = "拿到所有产品信息", httpMethod = "GET")
     public CommonResult<IPage<SeckillProductVO>> getAllProduct(

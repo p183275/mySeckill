@@ -61,7 +61,6 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-
     // 认证成功方法
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
@@ -74,6 +73,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         // 根据用户信息生成token
         Map<String, String> map = new HashMap<>();
         map.put("loginAccount", userVO.getLoginAccount());
+        map.put("userName", userVO.getName());
         map.put("userId", String.valueOf(userVO.getUserId()));
         map.put("roleId", String.valueOf(userVO.getRoleId()));
 

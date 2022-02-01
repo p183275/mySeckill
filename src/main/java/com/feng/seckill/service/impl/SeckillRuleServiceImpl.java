@@ -8,13 +8,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.feng.seckill.entitys.constant.ExceptionConstant;
 import com.feng.seckill.entitys.constant.RedisConstant;
 import com.feng.seckill.entitys.constant.SeckillRuleConstant;
-import com.feng.seckill.entitys.po.SeckillProductPO;
 import com.feng.seckill.entitys.po.SeckillRulePO;
 import com.feng.seckill.entitys.vo.HelpPage;
 import com.feng.seckill.entitys.vo.SeckillRuleVO;
 import com.feng.seckill.mapper.BreakRuleMapper;
 import com.feng.seckill.mapper.SeckillRuleMapper;
-import com.feng.seckill.service.BreakRuleService;
 import com.feng.seckill.service.SeckillRuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +24,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -106,6 +103,9 @@ public class SeckillRuleServiceImpl extends ServiceImpl<SeckillRuleMapper, Secki
         SeckillRulePO seckillRulePO = new SeckillRulePO();
         BeanUtils.copyProperties(seckillRuleVO, seckillRulePO);
 
+        // 删除正在生效的规则
+        redisTemplate.delete(RedisConstant.EFFECT_RULES);
+
         // 更新数据
         seckillRuleMapper.updateById(seckillRulePO);
     }
@@ -143,6 +143,9 @@ public class SeckillRuleServiceImpl extends ServiceImpl<SeckillRuleMapper, Secki
             seckillRulePO.setRuleStatus(SeckillRuleConstant.RuleStatus.EFFECT.getCode());
             return seckillRulePO;
         }).collect(Collectors.toList());
+
+        // 删除正在生效的规则
+        redisTemplate.delete(RedisConstant.EFFECT_RULES);
 
         // 调用更新方法批量修改
         this.updateBatchById(seckillRulePOS);

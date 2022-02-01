@@ -30,9 +30,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -134,6 +132,8 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
         productIdList.forEach(item ->
                 redisTemplate.delete(RedisConstant.PRODUCTION_NUMBER + item));
 
+        // 删除redis 中的产品
+        redisTemplate.delete(RedisConstant.PRODUCTIONS);
 
         // 不为空则删除
         seckillProductMapper.deleteBatchIds(productIdList);
@@ -164,9 +164,10 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
 
         // 从redis中拿到连接
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        // 将连接写入redis
         String urlFromRedis = operations.get(RedisConstant.PRODUCTION_URL
                 + randomProductUrlVO.getProductId());
+
+        // 将连接写入redis
         if (urlFromRedis != null){
             // 如果redis中有连接，则更新，若无则等待统一更新
             operations.set(RedisConstant.PRODUCTION_URL+randomProductUrlVO.getProductId(), url,
@@ -174,8 +175,34 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
         }
 
         // 更新链接
-        seckillProductMapper.updateById(seckillProductPO);
+        int i = seckillProductMapper.updateById(seckillProductPO);
         return url;
+    }
+
+    /**
+     * 刷新产品数量
+     */
+    @Override
+    public void reflashProductionNumber() {
+        // 从数据库中获取正在生效的产品
+        Map<String, String> numberMap = getProductNumberFromRedis();
+        // 创建对象
+        List<SeckillProductPO> list = new ArrayList<>();
+        // 遍历map
+        Set<Map.Entry<String, String>> entrySet = numberMap.entrySet();
+        entrySet.forEach(item -> {
+            // 封装对象
+            SeckillProductPO productPO = new SeckillProductPO();
+            productPO.setProductId(Long.parseLong(item.getKey()));
+            productPO.setProductNumber(Integer.parseInt(item.getValue()));
+            list.add(productPO);
+        });
+
+        // 如果集合不为空 则更新库存
+        if (!list.isEmpty()){
+            // 更新
+            this.updateBatchById(list);
+        }
     }
 
     /**

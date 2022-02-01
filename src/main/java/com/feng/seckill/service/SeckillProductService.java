@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.feng.seckill.entitys.po.SeckillProductPO;
 import com.feng.seckill.entitys.vo.*;
-import org.springframework.http.HttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -47,6 +46,11 @@ public interface SeckillProductService extends IService<SeckillProductPO> {
     String updateUrl(RandomProductUrlVO randomProductUrlVO);
 
     /**
+     * 刷新产品数量
+     */
+    void reflashProductionNumber();
+
+    /**
      * 并发请求展示商品
      * @return 商品集合
      */
@@ -67,4 +71,5 @@ public interface SeckillProductService extends IService<SeckillProductPO> {
      * @return 秒杀结果
      */
     String doSeckill(String dynamicUrl1, String dynamicUrl12, MySeckillVO mySeckillVO, HttpServletRequest request);
+
 }
