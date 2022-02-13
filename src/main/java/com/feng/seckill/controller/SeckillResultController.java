@@ -35,7 +35,7 @@ public class SeckillResultController {
                 @RequestParam(value = "maxLimit", required = false, defaultValue = "10") Long maxLimit,
             @ApiParam(value = "关键字", name = "key")
                 @RequestParam(value = "key", required = false) String key,
-            @ApiParam(value = "状态 0-失效 1-生效")
+            @ApiParam(value = "用户id", name = "productId")
                 @RequestParam(value = "productId", required = false) Long productId){
 
         Page<SeckillResultPO> page = seckillResultService.queryPage(key, productId, new HelpPage(current, maxLimit));

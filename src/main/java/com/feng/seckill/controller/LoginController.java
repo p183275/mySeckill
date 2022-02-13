@@ -5,6 +5,7 @@ import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.result.CommonResult;
 import com.feng.seckill.entitys.vo.UserLoginVO;
 import com.feng.seckill.entitys.vo.UserRegisterVO;
+import com.feng.seckill.entitys.vo.UserVO;
 import com.feng.seckill.service.UserLoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,13 @@ public class LoginController {
 
     @Autowired
     private UserLoginService userLoginService;
+
+    @GetMapping(value = "/login/get/info")
+    @ApiOperation(value = "拿到当前登录用户的所有信息")
+    public CommonResult<UserVO> getLoginInfo(HttpServletRequest request){
+        UserVO userVO = userLoginService.getLoginUserInfo(request);
+        return new CommonResult<>(200, "成功", userVO);
+    }
 
     @PostMapping("/get/check/code")
     @ApiOperation(value = "用户发送短信拿到验证码", httpMethod = "POST")

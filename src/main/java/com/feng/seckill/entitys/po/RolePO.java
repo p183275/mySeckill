@@ -18,6 +18,6 @@ public class RolePO {
     private Long roleId; // id
     private String roleName; // 角色名称
     private String content; // 说明
-    private Date creatTime; // 创建时间
+    private Date createTime; // 创建时间
 
 }

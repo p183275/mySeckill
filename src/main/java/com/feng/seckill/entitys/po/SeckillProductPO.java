@@ -27,6 +27,7 @@ public class SeckillProductPO {
     private String productStatus; // 产品状态（未开始 正在进行 已结束）
     private BigDecimal worth; // 产品净值
     @TableLogic
+    private String deleteStatus;
     private String showStatus;
     private Date beginTime; // 开始时间
     private Date endTime; // 结束时间

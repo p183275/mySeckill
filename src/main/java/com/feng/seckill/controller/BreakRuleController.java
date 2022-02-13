@@ -43,7 +43,7 @@ public class BreakRuleController {
     }
 
     @PostMapping(value = "/add/info")
-    @ApiOperation(value = "增加记录", httpMethod = "POST")
+    @ApiOperation(value = "增加记录", httpMethod = "POST", notes = "注意：只需要传 userId 和 ruleId")
     public CommonResult<String> addRecord(
             @ApiParam(value = "破坏规则信息封装", name = "breakRuleVO")
                 @RequestBody BreakRuleVO breakRuleVO){

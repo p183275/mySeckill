@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.UserLoginVO;
 import com.feng.seckill.entitys.vo.UserRegisterVO;
+import com.feng.seckill.entitys.vo.UserVO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -32,4 +34,10 @@ public interface UserLoginService extends IService<UserPO> {
      */
     Map<String, String> adminLogin(UserLoginVO loginVO);
 
+    /**
+     * 拿到当前登录用户的所有请求
+     * @param request 请求
+     * @return 用户信息
+     */
+    UserVO getLoginUserInfo(HttpServletRequest request);
 }

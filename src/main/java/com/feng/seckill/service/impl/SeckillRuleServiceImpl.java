@@ -178,7 +178,7 @@ public class SeckillRuleServiceImpl extends ServiceImpl<SeckillRuleMapper, Secki
                     queryWrapper.eq("rule_status", SeckillRuleConstant.RuleStatus.EFFECT.getCode());
                     List<SeckillRulePO> seckillRulePOS = seckillRuleMapper.selectList(queryWrapper);
 
-                    // 以拿出idd
+                    // 以拿出id
                     Set<Long> ruleIdSet = seckillRulePOS.stream().map(SeckillRulePO::getRuleId)
                             .collect(Collectors.toSet());
 

@@ -34,7 +34,7 @@ public class FirstFilterController {
                 @RequestParam(value = "maxLimit", required = false, defaultValue = "10") Long maxLimit,
             @ApiParam(value = "关键字", name = "key")
                 @RequestParam(value = "key", required = false) String key,
-            @ApiParam(value = "状态 0-失效 1-生效")
+            @ApiParam(value = "状态 0-失效 1-生效", name = "passStatus")
                 @RequestParam(value = "passStatus", required = false) String passStatus){
 
         Page<FirstFilterPO> page = firstFilterService.queryPage(key, passStatus, new HelpPage(current, maxLimit));

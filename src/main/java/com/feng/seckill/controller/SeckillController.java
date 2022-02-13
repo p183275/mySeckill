@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/get/seckill")
-@Api(tags = "秒杀系统API")
+@Api(tags = "前台：秒杀系统API")
 public class SeckillController {
 
     @Autowired

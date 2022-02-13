@@ -26,6 +26,8 @@ public class AddSeckillProductVO {
     private String productComment;
     @ApiModelProperty(value = "产品数量", example = "500")
     private Integer productNumber;
+    @ApiModelProperty(value = "产品是否展示在前台 0-展示 1-不展示", example = "0", notes = "0-展示 1-不展示")
+    private String showStatus;
     @ApiModelProperty(value = "产品净值", example = "4.2354")
     private BigDecimal worth;
     @ApiModelProperty(value = "产品价格", example = "10000")

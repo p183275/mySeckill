@@ -245,6 +245,8 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
                 if (stringOProductions2 == null){
                     // 查数据库
                     QueryWrapper<SeckillProductPO> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("show_status", "0");
+                    queryWrapper.orderByAsc("begin_time");
                     List<SeckillProductPO> seckillProductPOS = seckillProductMapper.selectList(queryWrapper);
 
                     // 转为json字符

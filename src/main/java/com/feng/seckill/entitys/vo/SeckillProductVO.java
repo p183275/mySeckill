@@ -29,6 +29,8 @@ public class SeckillProductVO {
     private Integer productNumber;
     @ApiModelProperty(value = "产品价格", example = "10000")
     private Integer productPrice;
+    @ApiModelProperty(value = "产品是否展示在前台 0-展示 1-不展示", example = "0")
+    private String showStatus;
     @ApiModelProperty(value = "产品净值", example = "4.2354")
     private BigDecimal worth;
     @ApiModelProperty(value = "产品状态（0-未开始 1-正在进行 2-已结束）")

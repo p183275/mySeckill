@@ -6,7 +6,9 @@ import com.feng.seckill.entitys.constant.*;
 import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.UserLoginVO;
 import com.feng.seckill.entitys.vo.UserRegisterVO;
+import com.feng.seckill.entitys.vo.UserVO;
 import com.feng.seckill.exception.entity.SQLDuplicateException;
+import com.feng.seckill.mapper.UserInfoMapper;
 import com.feng.seckill.mapper.UserLoginMapper;
 import com.feng.seckill.service.UserLoginService;
 import com.feng.seckill.util.JWTUtils;
@@ -19,6 +21,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,6 +41,8 @@ public class UserLoginServiceImpl extends ServiceImpl<UserLoginMapper, UserPO> i
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserLoginMapper userLoginMapper;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
 
     /**
@@ -161,5 +166,27 @@ public class UserLoginServiceImpl extends ServiceImpl<UserLoginMapper, UserPO> i
         tokenMap.put("token", token);
 
         return tokenMap;
+    }
+
+    /**
+     * 拿到当前登录用户的所有信息
+     * @param request 请求
+     * @return 用户信息
+     */
+    @Override
+    public UserVO getLoginUserInfo(HttpServletRequest request) {
+
+        // 拿到用户主键
+        String token = request.getHeader("token");
+        String userId = JWTUtils.verify(token).getClaim("userId").asString();
+
+        // 拿到用户信息
+        UserPO userPO = userInfoMapper.selectById(Long.parseLong(userId));
+
+        // 创建对象复制属性
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userPO, userVO);
+
+        return userVO;
     }
 }

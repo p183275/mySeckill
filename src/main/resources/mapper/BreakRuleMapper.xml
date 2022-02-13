@@ -6,6 +6,7 @@
         SELECT rule_id
         FROM t_user_break_rule
         WHERE user_id = #{userId}
+        AND status = 1
     </select>
 
 </mapper>

@@ -26,7 +26,7 @@ public class UserVO {
     private String gender;
     @ApiModelProperty(value = "年龄", example = "20")
     private String address;
-    @ApiModelProperty(value = "年龄", example = "20")
+    @ApiModelProperty(value = "账号", example = "20")
     private String loginAccount;
     @ApiModelProperty(value = "登录密码", example = "haha")
     @JsonIgnore
@@ -41,6 +41,7 @@ public class UserVO {
     private String idCard;
     @ApiModelProperty(value = "创建日期", example = "2001-09-23")
     private Date createDate;
+    @JsonIgnore
     @ApiModelProperty(value = "是否有资格参加活动", example = "false")
     private boolean hasPermission;
 }
