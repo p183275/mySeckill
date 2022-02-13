@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author : pcf
@@ -15,7 +14,7 @@ import org.apache.ibatis.annotations.Param;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "分页数据")
-public class HelpPage {
+public class HelpPage{
 
     @ApiModelProperty(value = "当前页数", example = "1")
     private Long current;

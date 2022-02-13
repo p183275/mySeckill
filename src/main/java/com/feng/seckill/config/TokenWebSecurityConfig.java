@@ -77,24 +77,13 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/break/rule/get/info", "/break/rule/add/info", "/break/rule/update/info", "/break/rule/delete/info",
                 // 并发请求测试
                 "/get/seckill/show/productions",
+                // knif4j 所需
+                "/webjars/**", "/favicon.ico", "/doc.html", "/v2/api-docs",
                 // swagger-需要的静态资源
-                "/swagger-ui/index.html",
+                "/swagger-ui/**",
                 "/v3/api-docs",
-                "/swagger-ui/springfox.css",
-                "/swagger-ui/swagger-ui.css",
-                "/swagger-ui/swagger-ui-bundle.js",
-                "/swagger-ui/swagger-ui-standalone-preset.js",
-                "/swagger-ui/springfox.js",
-                "/swagger-resources/configuration/ui",
-                "/swagger-resources",
-                "/swagger-resources/configuration/security",
-                "/webjars/springfox-swagger-ui/swagger-ui.css",
-                "/webjars/springfox-swagger-ui/springfox.css",
-                "/webjars/springfox-swagger-ui/springfox.js",
-                "/webjars/springfox-swagger-ui/swagger-ui-standalone-preset.js",
-                "/webjars/springfox-swagger-ui/swagger-ui-bundle.js",
-                "/webjars/springfox-swagger-ui/swagger-ui.css",
-                "/webjars/springfox-swagger-ui/springfox.css"
+                "/swagger-resources/**",
+                "/swagger-resources"
         );
     }
 

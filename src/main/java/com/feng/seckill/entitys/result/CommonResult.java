@@ -1,5 +1,7 @@
 package com.feng.seckill.entitys.result;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,15 +15,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@ApiModel(value = "json格式统一封装类")
 public class CommonResult<T>{
 
-    // 返回代码
+    @ApiModelProperty(value = "返回码", example = "200")
     private Integer code;
 
-    // 返回的消息
+    @ApiModelProperty(value = "消息", example = "成功")
     private String message;
 
-    // 返回的数据
+    @ApiModelProperty(value = "数据体", example = "泛型")
     private T data;
 
     public CommonResult(Integer code, String message){
