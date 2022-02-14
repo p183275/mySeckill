@@ -12,10 +12,12 @@ import com.feng.seckill.entitys.constant.RedisConstant;
 import com.feng.seckill.entitys.constant.SeckillProductConstant;
 import com.feng.seckill.entitys.po.SeckillProductPO;
 import com.feng.seckill.entitys.po.SeckillResultPO;
+import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.*;
 import com.feng.seckill.exception.entity.SQLDuplicateException;
 import com.feng.seckill.mapper.SeckillProductMapper;
 import com.feng.seckill.mapper.SeckillResultMapper;
+import com.feng.seckill.mapper.UserInfoMapper;
 import com.feng.seckill.service.SeckillProductService;
 import com.feng.seckill.util.JWTUtils;
 import com.feng.seckill.util.ProductUtil;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -49,6 +52,8 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
     private SeckillProductMapper seckillProductMapper;
     @Autowired
     private SeckillResultMapper seckillResultMapper;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     @Override
     public IPage<SeckillProductVO> queryPage(HelpPage page) {
@@ -398,6 +403,22 @@ public class SeckillProductServiceImpl extends ServiceImpl<SeckillProductMapper,
             // 用户id和姓名放入对象
             seckillResultPO.setUserId(Long.parseLong(userId));
             seckillResultPO.setUserName(userName);
+
+            // 拿到用户对象 以及 产品对象
+            UserPO userPO = userInfoMapper.selectById(Long.parseLong(userId));
+            SeckillProductPO seckillProductPO = seckillProductMapper.selectById(mySeckillVO.getProductId());
+
+            // TODO 判断用户余额是否充足
+            BigDecimal userMoney = userPO.getMoney();
+            Integer price = seckillProductPO.getProductPrice();
+
+            if (userMoney.compareTo(new BigDecimal(price)) < 0){
+                throw new RuntimeException("账户余额不足");
+            }
+
+            // 更新用户余额
+            userPO.setMoney(userMoney.subtract(new BigDecimal(price)));
+            userInfoMapper.updateById(userPO);
 
             // 存入数据
             try {
