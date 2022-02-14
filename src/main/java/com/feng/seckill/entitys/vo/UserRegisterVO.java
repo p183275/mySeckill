@@ -16,6 +16,8 @@ public class UserRegisterVO {
     private String name;
     @ApiModelProperty(value = "年龄", example = "1")
     private Integer age;
+    @ApiModelProperty(value = "性别", example = "0 - 女 1 - 男")
+    private String gender;
     @ApiModelProperty(value = "地址", example = "斗罗大陆")
     private String address;
     @ApiModelProperty(value = "登录账号", example = "admin")

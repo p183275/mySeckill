@@ -18,7 +18,15 @@ public class HelpPage{
 
     @ApiModelProperty(value = "当前页数", example = "1")
     private Long current;
+    @ApiModelProperty(value = "每页显示数量", example = "1")
+    private long size;
     @ApiModelProperty(value = "每页最大显示数量", example = "1")
     private Long maxLimit;
+
+    public HelpPage(Long current, Long size){
+        this.current = current;
+        this.maxLimit = 40L;
+        this.size = size;
+    }
 
 }

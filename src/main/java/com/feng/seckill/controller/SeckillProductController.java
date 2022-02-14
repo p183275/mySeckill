@@ -40,10 +40,10 @@ public class SeckillProductController {
     public CommonResult<IPage<SeckillProductVO>> getAllProduct(
             @ApiParam(value = "当前页码", name = "current")
                 @RequestParam(value = "current", required = false, defaultValue = "1") Long current,
-            @ApiParam(value = "每页最大数据量", name = "maxLimit")
-                @RequestParam(value = "maxLimit", required = false, defaultValue = "10") Long maxLimit){
+            @ApiParam(value = "每页数据量", name = "size", example = "1", defaultValue = "10")
+                @RequestParam(value = "size", required = false, defaultValue = "10") Long size){
 
-        IPage<SeckillProductVO> page = seckillProductService.queryPage(new HelpPage(current, maxLimit));
+        IPage<SeckillProductVO> page = seckillProductService.queryPage(new HelpPage(current, size));
         return new CommonResult<>(200, "成功", page);
     }
 

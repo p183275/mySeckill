@@ -107,7 +107,7 @@ public class UserLoginServiceImpl extends ServiceImpl<UserLoginMapper, UserPO> i
             throw new RuntimeException(ExceptionConstant.PHONE_NUMBER_NOT_NULL_EXCEPTION);
 
         // 判断电话号码是否格式错误
-        if (phoneNumber.length() - 2 != 11 || !"1".equals(phoneNumber.substring(0, 1)))
+        if (phoneNumber.length() != 11 || !"1".equals(phoneNumber.substring(0, 1)))
             throw new RuntimeException(ExceptionConstant.PHONE_NUMBER_NOT_ILLEGAL_EXCEPTION);
 
         // 除去/r

@@ -34,14 +34,14 @@ public class UserInfoController {
     public CommonResult<Page<UserPO>> getAllUser(
             @ApiParam(value = "当前页码", name = "current", example = "1", defaultValue = "1")
                 @RequestParam(value = "current", required = false, defaultValue = "1") Long current,
-            @ApiParam(value = "每页最大数据量", name = "maxLimit", example = "1", defaultValue = "10")
-                @RequestParam(value = "maxLimit", required = false, defaultValue = "10") Long maxLimit,
+            @ApiParam(value = "每页数据量", name = "size", example = "1", defaultValue = "10")
+                @RequestParam(value = "size", required = false, defaultValue = "10") Long size,
             @ApiParam(value = "关键字", name = "key")
                 @RequestParam(value = "key", required = false) String key,
             @ApiParam(value = "性别")
                 @RequestParam(value = "gender", required = false) String gender){
 
-        Page<UserPO> userPOPage = userInfoService.queryPage(key, gender, new HelpPage(current, maxLimit));
+        Page<UserPO> userPOPage = userInfoService.queryPage(key, gender, new HelpPage(current, size));
         return new CommonResult<>(200, "成功", userPOPage);
     }
 

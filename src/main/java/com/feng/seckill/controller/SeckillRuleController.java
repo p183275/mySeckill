@@ -32,10 +32,10 @@ public class SeckillRuleController {
     public CommonResult<Page<SeckillRulePO>> getSeckillRulePages(
             @ApiParam(value = "当前页码", name = "current", example = "1", defaultValue = "1")
                 @RequestParam(value = "current", required = false, defaultValue = "1") Long current,
-            @ApiParam(value = "每页最大数据量", name = "maxLimit", example = "1", defaultValue = "10")
-                @RequestParam(value = "maxLimit", required = false, defaultValue = "10") Long maxLimit){
+            @ApiParam(value = "每页数据量", name = "size", example = "1", defaultValue = "10")
+                @RequestParam(value = "size", required = false, defaultValue = "10") Long size){
 
-        Page<SeckillRulePO> page = seckillRuleService.queryPage(new HelpPage(current, maxLimit));
+        Page<SeckillRulePO> page = seckillRuleService.queryPage(new HelpPage(current, size));
         return new CommonResult<>(200, "成功", page);
     }
 
