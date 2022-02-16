@@ -17,4 +17,9 @@ public class RedisConstant {
     public static final String BREAK_RULE_IDS = "BREAK_RULE_IDS"; // 正在生效的规则id
     public static final Integer EFFECT_RULES_EXPIRED_TIME = 15; // 正在生效的规则的过期时间为 15 min
     public static final Integer BREAK_RULE_IDS_EXPIRED_TIME = 10; // 正在生效的规则id的过期时间为 10 min
+
+    // 初筛规则配置
+    public static final String FILTER_OVERDUE_ENTITY = "FILTER_OVERDUE_ENTITY"; // 逾期实体配置类
+    public static final String FILTER_WORK_STATUS = "FILTER_WORK_STATUS"; // 工作状态条件
+    public static final String FILTER_AGE = "FILTER_AGE"; // 工作状态条件
 }

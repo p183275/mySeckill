@@ -7,7 +7,7 @@ package com.feng.seckill.entitys.constant;
  */
 public class SeckillProductConstant {
 
-    public static final String PRODUCT_ACTIVITY_URL = "http://localhost:8888/get/seckill/do/";
+    public static final String PRODUCT_ACTIVITY_URL = "http://pcf.natapp1.cc/get/seckill/do/";
     public static final String PRODUCTION_SUCCESS = "抢购成功!";
     public static final String PRODUCTION_FILED = "抢购失败，库存已空!";
     public static final String URL_FILED = "抢购失败，链接错误!";

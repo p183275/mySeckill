@@ -35,4 +35,5 @@ public interface FirstFilterService extends IService<FirstFilterPO> {
      * @param passStatus 0 -通过 1-未通过
      */
     void addRecordsByUser(Long userId, String userName, String passStatus);
+
 }

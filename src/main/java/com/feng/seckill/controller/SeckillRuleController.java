@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : pcf
@@ -40,7 +41,7 @@ public class SeckillRuleController {
     }
 
     @PostMapping(value = "/add/info")
-    @ApiOperation(value = "增加规则", httpMethod = "POST")
+    @ApiOperation(value = "规则：增加规则", httpMethod = "POST")
     public CommonResult<String> addSeckillRule(
             @ApiParam(value = "规则封装类 不需要传ruleId 和 ruleStatus", name = "seckillRuleVO")
                 @RequestBody SeckillRuleVO seckillRuleVO){
@@ -50,7 +51,7 @@ public class SeckillRuleController {
     }
 
     @PostMapping(value = "/update/info")
-    @ApiOperation(value = "修改规则", httpMethod = "POST")
+    @ApiOperation(value = "规则：修改规则", httpMethod = "POST")
     public CommonResult<String> updateSeckillRule(
             @ApiParam(value = "规则封装类", name = "seckillRuleVO")
             @RequestBody SeckillRuleVO seckillRuleVO){
@@ -60,7 +61,7 @@ public class SeckillRuleController {
     }
 
     @PostMapping(value = "/delete/by/id")
-    @ApiOperation(value = "删除规则", httpMethod = "POST", notes = "注意可以批量删除")
+    @ApiOperation(value = "规则：删除规则", httpMethod = "POST", notes = "注意可以批量删除")
     public CommonResult<String> deleteProduct(
             @ApiParam(value = "规则id", name = "ruleIdList")
                 @RequestBody List<Long> ruleIdList){
@@ -70,7 +71,7 @@ public class SeckillRuleController {
     }
 
     @PostMapping(value = "/add/activity/rules")
-    @ApiOperation(value = "给秒杀活动添加规则", httpMethod = "POST", notes = "可以批量添加")
+    @ApiOperation(value = "规则：给秒杀活动添加规则", httpMethod = "POST", notes = "可以批量添加")
     public CommonResult<String> addActivityRules(
             @ApiParam(value = "规则id", name = "ruleIdList")
                 @RequestBody List<Long> ruleIdList){
@@ -79,9 +80,23 @@ public class SeckillRuleController {
         return new CommonResult<>(200, "成功");
     }
 
-    @PostMapping(value="/test/permission")
-    public CommonResult<Boolean> test(@RequestBody Long userId){
-        boolean permission = seckillRuleService.getPermissionByUserId(userId);
-        return new CommonResult<>(200, "成功", permission);
+    @GetMapping(value = "/get/config/{ruleId}")
+    @ApiOperation(value = "初筛：拿到配置数据", httpMethod = "GET")
+    public CommonResult<Map<String, String>> getConfigVariable(
+            @ApiParam(value = "规则id", name = "ruleId", required = true)
+                @PathVariable(value = "ruleId") Long ruleId){
+        Map<String, String> config = seckillRuleService.getConfigVariable(ruleId);
+        return new CommonResult<>(200, "成功", config);
+    }
+
+    @PostMapping(value = "/update/config/{ruleId}")
+    @ApiOperation(value = "初筛：修改配置数据", httpMethod = "POST", notes = "键值对 -- 具体字段请见查询")
+    public CommonResult<String> updateConfigVariable(
+            @ApiParam(value = "规则id", name = "ruleId", required = true)
+                @PathVariable(value = "ruleId") Long ruleId,
+            @ApiParam(value = "键值对 -- 具体字段请见查询")
+                @RequestBody Map<String, String> mapParam){
+        seckillRuleService.updateConfigVariable(ruleId, mapParam);
+        return new CommonResult<>(200, "成功");
     }
 }

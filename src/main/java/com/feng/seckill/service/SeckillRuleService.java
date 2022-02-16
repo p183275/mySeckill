@@ -3,6 +3,7 @@ package com.feng.seckill.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.feng.seckill.entitys.po.SeckillRulePO;
+import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.HelpPage;
 import com.feng.seckill.entitys.vo.SeckillRuleVO;
 
@@ -48,14 +49,28 @@ public interface SeckillRuleService extends IService<SeckillRulePO> {
 
     /**
      * 通过用户id查询是否有资格参加秒杀活动
-     * @param userId 用户id
+     * @param userPO 用户信息封装类
      * @return false or true
      */
-    boolean getPermissionByUserId(Long userId);
+    boolean getPermissionByUserId(UserPO userPO);
 
     /**
      * 并发请求拿到秒杀活动的规则
      * @return 规则集合
      */
     List<SeckillRulePO> showRules();
+
+    /**
+     * 拿到配置参数
+     * @param ruleId 规则id
+     * @return 配置参数
+     */
+    Map<String, String> getConfigVariable(Long ruleId);
+
+    /**
+     * 修改配置参数
+     * @param ruleId 规则id
+     * @param mapParam 配置参数
+     */
+    void updateConfigVariable(Long ruleId, Map<String, String> mapParam);
 }

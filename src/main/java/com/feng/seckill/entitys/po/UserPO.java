@@ -47,6 +47,8 @@ public class UserPO {
     private String roleName;
     @ApiModelProperty(value = "身份证", example = "20")
     private String idCard;
+    @ApiModelProperty(value = "0-无业/失业 1-正在就业", example = "0")
+    private String workStatus;
     @ApiModelProperty(value = "创建日期", example = "2001-09-23")
     private Date createDate;
     @JsonIgnore
