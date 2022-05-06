@@ -16,19 +16,19 @@ public class AllExceptionHandler {
 
     @ExceptionHandler(value = SQLDuplicateException.class)
     public CommonResult<String> resolve(SQLDuplicateException e){
-        e.printStackTrace();
+//        e.printStackTrace();
         return new CommonResult<>(441, e.getMessage());
     }
 
     @ExceptionHandler(value = TokenException.class)
     public CommonResult<String> resultTokenError(TokenException exception){
-        exception.printStackTrace();
+//        exception.printStackTrace();
         return new CommonResult<>(444, "请重新登录!", exception.getMessage());
     }
 
     @ExceptionHandler(value = Exception.class)
     public CommonResult<String> resultAllError(Exception exception){
-        exception.printStackTrace();
+//        exception.printStackTrace();
         return new CommonResult<>(400, "失败", exception.getMessage());
     }
 

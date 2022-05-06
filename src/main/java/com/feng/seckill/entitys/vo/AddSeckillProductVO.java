@@ -31,7 +31,7 @@ public class AddSeckillProductVO {
     @ApiModelProperty(value = "产品净值", example = "4.2354")
     private BigDecimal worth;
     @ApiModelProperty(value = "产品价格", example = "10000")
-    private Integer productPrice;
+    private BigDecimal productPrice;
     @ApiModelProperty(value = "活动开始时间")
     private Date beginTime;
     @ApiModelProperty(value = "活动结束时间")

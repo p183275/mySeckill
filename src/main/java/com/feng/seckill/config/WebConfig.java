@@ -1,7 +1,10 @@
 package com.feng.seckill.config;
 
+import com.feng.seckill.interceptor.IPBlockInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -11,6 +14,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    @Autowired
+    private IPBlockInterceptor ipBlockInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(ipBlockInterceptor).addPathPatterns("/**");
+    }
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -19,4 +30,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600)
                 .allowCredentials(true);
         }
+
+
 }

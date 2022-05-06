@@ -20,6 +20,7 @@ public class BreakRulePO {
     private String userName; // 用户姓名
     private Long ruleId; // 规则id
     private String ruleName; // 规则名称
+    private Long recordId; // 记录 id
     private String status; // 状态 0-失效 1-生效
     private Date beginTime; // 开始时间
 

@@ -15,7 +15,8 @@ import java.util.regex.Pattern;
  * @author : pcf
  * @date : 2022/1/15 17:36
  */
-@Component
+//@Component
+@Deprecated
 public class DefaultPasswordEncoder implements PasswordEncoder {
 
     private Pattern BCRYPT_PATTERN;

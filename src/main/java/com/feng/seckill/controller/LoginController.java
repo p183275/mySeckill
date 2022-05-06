@@ -3,6 +3,7 @@ package com.feng.seckill.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.result.CommonResult;
+import com.feng.seckill.entitys.vo.UserInfoAndAccountVO;
 import com.feng.seckill.entitys.vo.UserLoginVO;
 import com.feng.seckill.entitys.vo.UserRegisterVO;
 import com.feng.seckill.entitys.vo.UserVO;
@@ -32,8 +33,8 @@ public class LoginController {
 
     @GetMapping(value = "/login/get/info")
     @ApiOperation(value = "拿到当前登录用户的所有信息")
-    public CommonResult<UserVO> getLoginInfo(HttpServletRequest request){
-        UserVO userVO = userLoginService.getLoginUserInfo(request);
+    public CommonResult<UserInfoAndAccountVO> getLoginInfo(HttpServletRequest request){
+        UserInfoAndAccountVO userVO = userLoginService.getLoginUserInfo(request);
         return new CommonResult<>(200, "成功", userVO);
     }
 
@@ -41,9 +42,9 @@ public class LoginController {
     @ApiOperation(value = "用户发送短信拿到验证码", httpMethod = "POST")
     public CommonResult<String> getCheckCode(
             @ApiParam(value = "传入电话号码", name = "phoneNumber")
-               @RequestBody String phoneNumber){
+               @RequestBody Map<String, String> map){
 
-        userLoginService.getCheckCode(phoneNumber);
+        userLoginService.getCheckCode(map.get("phoneNumber"));
         return new CommonResult<>(200, "成功");
     }
 

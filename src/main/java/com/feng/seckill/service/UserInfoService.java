@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.HelpPage;
+import com.feng.seckill.entitys.vo.UserInfoAndAccountVO;
 import com.feng.seckill.entitys.vo.UserVO;
 
 import java.util.List;
@@ -34,4 +35,11 @@ public interface UserInfoService extends IService<UserPO> {
      * @param vo 用户信息封装类
      */
     void updateUser(UserVO vo);
+
+    /**
+     * 通过 userId 查找用户信息
+     * @param userId is
+     * @return 用户及账户信息
+     */
+    UserInfoAndAccountVO getAllInfo(Long userId);
 }

@@ -31,9 +31,10 @@ import java.util.Map;
  * @author : pcf
  * @date : 2022/1/15 16:54
  */
+
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
     private AuthenticationManager authenticationManager;
 
@@ -74,19 +75,16 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         Map<String, String> map = new HashMap<>();
         map.put("loginAccount", userVO.getLoginAccount());
         map.put("userName", userVO.getName());
-        map.put("userId", String.valueOf(userVO.getUserId()));
-        map.put("roleId", String.valueOf(userVO.getRoleId()));
+        map.put("userId", userVO.getUserId() + "");
+        map.put("roleId", userVO.getRoleId() + "");
+        map.put("hasPermission", userVO.isHasPermission() + "");
 
         // 参数放入map中，设置过期时间1天
-        String token = JWTUtils.getToken(map, 1);
+        String token = JWTUtils.getToken(map, TokenConstant.TOKEN_EXPIRE_TIME);
 
         // token 放入redis中
         redisTemplate.opsForValue().set(userVO.getLoginAccount() + TokenConstant.TOKEN,
-                token, Duration.ofDays(1));
-
-        // 把用户名称及用户权限信息放入redis
-//        redisTemplate.opsForValue().set(securityUser.getUsername() + LoginConstant.VALUE_CREATE_AUTH_LIST,
-//                securityUser.getPermissionValueList(), Duration.ofDays(1));
+                token, Duration.ofDays(10));
 
         // 拿到查看是否有资格参加活动
         boolean permission = userVO.isHasPermission();

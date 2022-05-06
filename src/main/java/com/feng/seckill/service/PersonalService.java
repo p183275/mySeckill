@@ -15,6 +15,11 @@ import java.util.List;
 public interface PersonalService {
 
     /**
+     * 清除黑名单
+     */
+    void reflashBlackNames();
+
+    /**
      * 获得个人破坏规则的记录
      * @param request 请求
      * @return 破坏规则的记录
@@ -28,4 +33,6 @@ public interface PersonalService {
      * @return 记录
      */
     IPage<SeckillResultPO> getPersonalProduct(HttpServletRequest request, HelpPage helpPage);
+
+    void createUser(Integer number);
 }

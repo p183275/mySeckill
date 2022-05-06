@@ -1,8 +1,16 @@
 package com.feng.seckill.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feng.seckill.entitys.constant.RedisConstant;
+import com.feng.seckill.entitys.result.CommonResult;
+import com.feng.seckill.util.IPUtils;
 import com.feng.seckill.util.JWTUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author : pcf
@@ -20,11 +29,8 @@ import java.io.IOException;
  */
 public class TokenAuthFilter extends BasicAuthenticationFilter {
 
-    private RedisTemplate redisTemplate;
-
-    public TokenAuthFilter(AuthenticationManager authenticationManager, RedisTemplate redisTemplate) {
+    public TokenAuthFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
-        this.redisTemplate = redisTemplate;
     }
 
     // 过滤规则
@@ -33,7 +39,22 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
 
         // 获取当前用户认证成功后的权限信息
-        UsernamePasswordAuthenticationToken authRequest = getAuthentication(request);
+        UsernamePasswordAuthenticationToken authRequest = null;
+        try {
+            authRequest = getAuthentication(request);
+        }catch (Exception e){
+            CommonResult<Object> result = new CommonResult<>(444, e.getMessage());
+
+            // 将返回体转化为json字符串
+            String json = new ObjectMapper().writeValueAsString(result);
+
+            // 设置编码类型
+            response.setContentType("application/json;charset=UTF-8");
+
+            // 返回
+            response.getWriter().write(json);
+            return;
+        }
 
         // 如果有权限信息放入权限上下文中
         if (authRequest != null) {
@@ -44,8 +65,10 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
+
     /**
      * 拿到权限列表
+     *
      * @param request 请求
      * @return 使用用户信息编写的token
      */
@@ -54,10 +77,9 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         String token = null;
 
         // 从header中获取token
-        token  = request.getHeader("token");
+        token = request.getHeader("token");
 
         if (token != null) {
-
             // 从token中获取用户信息
             DecodedJWT verify = JWTUtils.verify(token);
             String loginAccount = verify.getClaim("loginAccount").asString();

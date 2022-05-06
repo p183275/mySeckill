@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @date : 2022/1/16 15:45
  */
 @Configuration
-@MapperScan("com.feng.seckill.mapper")
+//@MapperScan("com.feng.seckill.mapper")
 public class MyBatisConfig {
 
     @Bean

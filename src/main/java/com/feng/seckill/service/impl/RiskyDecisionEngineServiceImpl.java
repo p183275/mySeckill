@@ -12,6 +12,7 @@ import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.mapper.CreditMapper;
 import com.feng.seckill.mapper.OverdueRecordMapper;
 import com.feng.seckill.service.RiskyDecisionEngineService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,17 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 /**
  * @author : pcf
  * @date : 2022/2/14 20:49
  */
+@Slf4j
 @Service
 public class RiskyDecisionEngineServiceImpl implements RiskyDecisionEngineService {
 
@@ -35,6 +41,8 @@ public class RiskyDecisionEngineServiceImpl implements RiskyDecisionEngineServic
     private OverdueRecordMapper overdueRecordMapper;
     @Autowired
     private CreditMapper creditMapper;
+    @Autowired
+    private ThreadPoolExecutor executor;
 
     /**
      * 逾期过滤
@@ -162,4 +170,48 @@ public class RiskyDecisionEngineServiceImpl implements RiskyDecisionEngineServic
         return userPO.getAge() >= Integer.parseInt(age);
     }
 
+    @Override
+    public boolean judgeByAsc(Set<Long> BreakRuleIds, UserPO userPO) throws ExecutionException, InterruptedException {
+
+        // 判断逾期记录
+        CompletableFuture<Boolean> judgeOverDue = CompletableFuture.supplyAsync(() -> {
+            boolean judge = true;
+            if (BreakRuleIds.contains(BreakRuleConstant.FilterType.OVERDUE.getCode())) {
+                judge = this.overdueFilter(userPO.getUserId());
+            }
+            return judge;
+        }, executor);
+
+        // 判断工作状态
+        CompletableFuture<Boolean> judgeWork = CompletableFuture.supplyAsync(() -> {
+            boolean judge = true;
+            if (BreakRuleIds.contains(BreakRuleConstant.FilterType.WORK_STATUS.getCode())) {
+                judge = this.workStatusFilter(userPO);
+            }
+            return judge;
+        }, executor);
+
+        // 判断失信记录
+        CompletableFuture<Boolean> judgeDefaulter = CompletableFuture.supplyAsync(() -> {
+            boolean judge = true;
+            if (BreakRuleIds.contains(BreakRuleConstant.FilterType.DEFAULTER.getCode())) {
+                judge = this.defaulterFilter(userPO.getUserId());
+            }
+            return judge;
+        }, executor);
+
+        // 判断年龄
+        CompletableFuture<Boolean> judgeAge = CompletableFuture.supplyAsync(() -> {
+            boolean judge = true;
+            if (BreakRuleIds.contains((BreakRuleConstant.FilterType.AGE.getCode()))) {
+                judge = this.ageFilter(userPO);
+            }
+            return judge;
+        }, executor);
+
+        // 等待所有异步任务完成
+        CompletableFuture.allOf(judgeOverDue, judgeWork, judgeDefaulter, judgeAge).get();
+
+        return judgeAge.get() && judgeWork.get() && judgeDefaulter.get() && judgeAge.get();
+    }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.seckill.mapper.AccountMapper">
+    <update id="decBalance">
+        UPDATE t_user_account
+        SET balance = balance - #{price}
+        WHERE account_id = #{accountId} AND balance = #{oldBalance}
+    </update>
+    <update id="incBalance">
+        UPDATE t_user_account
+        SET balance = balance + #{price}
+        WHERE account_id = #{accountId}
+    </update>
+</mapper>

@@ -6,25 +6,7 @@ package com.feng.seckill.exception.entity;
  * token 异常类
  */
 public class TokenException extends RuntimeException{
-    public TokenException() {
-        super();
-    }
-
-    public TokenException(String message) {
-        super(message);
-    }
-
-    public TokenException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public TokenException(Throwable cause) {
-        super(cause);
-    }
-
-    protected TokenException(String message, Throwable cause,
-                               boolean enableSuppression,
-                               boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public TokenException(){
+        super("token验签错误，或已过期，请重新登录");
     }
 }

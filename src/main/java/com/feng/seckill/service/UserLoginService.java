@@ -2,6 +2,7 @@ package com.feng.seckill.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.feng.seckill.entitys.po.UserPO;
+import com.feng.seckill.entitys.vo.UserInfoAndAccountVO;
 import com.feng.seckill.entitys.vo.UserLoginVO;
 import com.feng.seckill.entitys.vo.UserRegisterVO;
 import com.feng.seckill.entitys.vo.UserVO;
@@ -39,5 +40,5 @@ public interface UserLoginService extends IService<UserPO> {
      * @param request 请求
      * @return 用户信息
      */
-    UserVO getLoginUserInfo(HttpServletRequest request);
+    UserInfoAndAccountVO getLoginUserInfo(HttpServletRequest request);
 }

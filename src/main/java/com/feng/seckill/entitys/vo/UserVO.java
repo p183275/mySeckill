@@ -25,8 +25,6 @@ public class UserVO {
     private Integer age;
     @ApiModelProperty(value = "性别", example = "0 - 女 1 - 男")
     private String gender;
-    @ApiModelProperty(value = "余额", example = "1.00")
-    private BigDecimal money;
     @ApiModelProperty(value = "地址", example = "20")
     private String address;
     @ApiModelProperty(value = "账号", example = "20")

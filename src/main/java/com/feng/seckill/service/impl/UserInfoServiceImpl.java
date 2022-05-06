@@ -7,6 +7,7 @@ import com.feng.seckill.entitys.constant.ExceptionConstant;
 import com.feng.seckill.entitys.po.RolePO;
 import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.vo.HelpPage;
+import com.feng.seckill.entitys.vo.UserInfoAndAccountVO;
 import com.feng.seckill.entitys.vo.UserVO;
 import com.feng.seckill.mapper.RoleMapper;
 import com.feng.seckill.mapper.UserInfoMapper;
@@ -98,5 +99,16 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserPO> imp
 
         // 修改
         userInfoMapper.updateById(userPO);
+    }
+
+    /**
+     * 通过 userId 查找用户信息
+     * @param userId is
+     * @return 用户及账户信息
+     */
+    @Override
+    public UserInfoAndAccountVO getAllInfo(Long userId) {
+
+        return userInfoMapper.getUserInfoAndAccountVO(userId);
     }
 }

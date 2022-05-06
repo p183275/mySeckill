@@ -25,7 +25,7 @@ public class JWTUtils {
     public static String getToken(Map<String, String> map, Integer expireTime) {
 
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DATE, expireTime);
+        instance.add(Calendar.HOUR, expireTime);
 
         JWTCreator.Builder builder = JWT.create();
 
@@ -55,8 +55,8 @@ public class JWTUtils {
             return verify;
 
         } catch (JWTVerificationException e) {
-            e.printStackTrace();
-            throw new TokenException("token验签错误，或已过期，请重新登录");
+//            e.printStackTrace();
+            throw new TokenException();
         }
     }
 

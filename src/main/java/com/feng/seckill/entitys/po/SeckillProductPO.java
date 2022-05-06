@@ -23,7 +23,7 @@ public class SeckillProductPO {
     private String photoUrl; // 活动图片介绍
     private String productComment; // 产品介绍
     private Integer productNumber; // 产品数量
-    private Integer productPrice; // 产品价格
+    private BigDecimal productPrice; // 产品价格
     private String productStatus; // 产品状态（未开始 正在进行 已结束）
     private BigDecimal worth; // 产品净值
     @TableLogic

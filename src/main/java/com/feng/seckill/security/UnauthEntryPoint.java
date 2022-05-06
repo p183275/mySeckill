@@ -20,7 +20,7 @@ public class UnauthEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException e) throws IOException, ServletException {
         // 创建返回体
-        CommonResult<Object> result = new CommonResult<>(444, "请登录后再访问");
+        CommonResult<Object> result = new CommonResult<>(444, "请登录后再访问!");
 
         // 将返回体转化为json字符串
         String json = new ObjectMapper().writeValueAsString(result);

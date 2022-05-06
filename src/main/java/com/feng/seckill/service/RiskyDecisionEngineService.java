@@ -2,6 +2,9 @@ package com.feng.seckill.service;
 
 import com.feng.seckill.entitys.po.UserPO;
 
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+
 /**
  * @author : pcf
  * @date : 2022/2/14 20:49
@@ -36,5 +39,15 @@ public interface RiskyDecisionEngineService {
      * @return true or false
      */
     boolean ageFilter(UserPO userPO);
+
+    /**
+     * 异步判断用户是否有资格参加活动
+     * @param BreakRuleIds 开启的规则
+     * @param userPO 用户信息
+     * @return true or false
+     * @throws ExecutionException 异常
+     * @throws InterruptedException 异常
+     */
+    boolean judgeByAsc(Set<Long> BreakRuleIds, UserPO userPO) throws ExecutionException, InterruptedException;
 
 }

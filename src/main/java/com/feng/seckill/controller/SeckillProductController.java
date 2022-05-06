@@ -1,6 +1,7 @@
 package com.feng.seckill.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.feng.seckill.entitys.po.SeckillProductPO;
 import com.feng.seckill.entitys.result.CommonResult;
 import com.feng.seckill.entitys.vo.AddSeckillProductVO;
 import com.feng.seckill.entitys.vo.HelpPage;
@@ -28,10 +29,14 @@ public class SeckillProductController {
     private SeckillProductService seckillProductService;
 
     @GetMapping(value = "/reflash/production/number")
-    @ApiOperation(value = "刷新产品数量", httpMethod = "GET")
-    public CommonResult<String> reflashProductionNumber(){
+    @ApiOperation(value = "刷新产品数据", httpMethod = "GET")
+    public CommonResult<String> reflashProductionNumber(
+            @ApiParam(value = "当前页码", name = "current")
+            @RequestParam(value = "current", required = false, defaultValue = "1") Long current,
+            @ApiParam(value = "每页数据量", name = "size", example = "1", defaultValue = "10")
+            @RequestParam(value = "size", required = false, defaultValue = "10") Long size) {
 
-        seckillProductService.reflashProductionNumber();
+        seckillProductService.reflashProduction();
         return new CommonResult<>(200, "成功");
     }
 
@@ -39,9 +44,9 @@ public class SeckillProductController {
     @ApiOperation(value = "拿到所有产品信息", httpMethod = "GET")
     public CommonResult<IPage<SeckillProductVO>> getAllProduct(
             @ApiParam(value = "当前页码", name = "current")
-                @RequestParam(value = "current", required = false, defaultValue = "1") Long current,
+            @RequestParam(value = "current", required = false, defaultValue = "1") Long current,
             @ApiParam(value = "每页数据量", name = "size", example = "1", defaultValue = "10")
-                @RequestParam(value = "size", required = false, defaultValue = "10") Long size){
+            @RequestParam(value = "size", required = false, defaultValue = "10") Long size) {
 
         IPage<SeckillProductVO> page = seckillProductService.queryPage(new HelpPage(current, size));
         return new CommonResult<>(200, "成功", page);
@@ -51,7 +56,7 @@ public class SeckillProductController {
     @ApiOperation(value = "添加产品", httpMethod = "POST")
     public CommonResult<String> addProduct(
             @ApiParam(value = "产品属性", name = "vo")
-                @RequestBody AddSeckillProductVO vo){
+            @RequestBody AddSeckillProductVO vo) {
 
         seckillProductService.addSeckillProduct(vo);
         return new CommonResult<>(200, "成功");
@@ -61,7 +66,7 @@ public class SeckillProductController {
     @ApiOperation(value = "修改产品", httpMethod = "POST")
     public CommonResult<String> updateProduct(
             @ApiParam(value = "产品属性", name = "vo")
-            @RequestBody SeckillProductVO vo){
+            @RequestBody SeckillProductVO vo) {
 
         seckillProductService.updateSeckillProduct(vo);
         return new CommonResult<>(200, "成功");
@@ -71,7 +76,7 @@ public class SeckillProductController {
     @ApiOperation(value = "删除产品", httpMethod = "POST")
     public CommonResult<String> deleteProduct(
             @ApiParam(value = "产品id", name = "productIdList")
-            @RequestBody List<Long> productIdList){
+            @RequestBody List<Long> productIdList) {
 
         seckillProductService.deleteSeckillProduct(productIdList);
         return new CommonResult<>(200, "成功");
@@ -81,7 +86,7 @@ public class SeckillProductController {
     @ApiOperation(value = "点击按钮修改活动链接", httpMethod = "POST")
     public CommonResult<String> updateUrl(
             @ApiParam(value = "活动id", name = "productId")
-            @RequestBody RandomProductUrlVO randomProductUrlVO){
+            @RequestBody RandomProductUrlVO randomProductUrlVO) {
 
         String url = seckillProductService.updateUrl(randomProductUrlVO);
         return new CommonResult<>(200, "成功", url);

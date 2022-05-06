@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.feng.seckill.mapper.UserInfoMapper">
+    <resultMap id="userInfoAndAccount" type="com.feng.seckill.entitys.vo.UserInfoAndAccountVO">
+        <id property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+        <result property="gender" column="gender"/>
+        <result property="address" column="address"/>
+        <result property="loginAccount" column="login_account"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="idCard" column="id_card"/>
+        <result property="workStatus" column="work_status"/>
+        <result property="createDate" column="create_date"/>
+        <collection property="accountVO" ofType="com.feng.seckill.entitys.vo.AccountVO">
+            <result property="accountId" column="account_id"/>
+            <result property="accountNum" column="account_num"/>
+            <result property="balance" column="balance"/>
+            <result property="createDate" column="a_create_date"/>
+        </collection>
+    </resultMap>
 
+    <select id="getUserInfoAndAccountVO" resultMap="userInfoAndAccount">
+        SELECT u.user_id, u.`name`, u.age, u.gender, u.address, u.login_account, u.phone_number, 
+               u.role_id, u.role_name,u.id_card, u.work_status, u.create_date, a.account_id, 
+               a.account_num, a.balance, a.create_date 'a_create_date'
+        FROM t_user u LEFT JOIN t_user_account a
+                                ON u.account_id = a.account_id
+        WHERE u.user_id = #{userId}
+    </select>
+
+    <update id="updateAccId">
+        UPDATE t_user SET account_id = #{accId}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

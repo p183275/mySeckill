@@ -24,6 +24,8 @@ public class BreakRuleVO {
     private Long ruleId;
     @ApiModelProperty(value = "规则名称")
     private String ruleName;
+    @ApiModelProperty(value = "记录 id")
+    private Long recordId;
     @ApiModelProperty(value = "状态 0-失效 1-生效", example = "0")
     private String status;
     @ApiModelProperty(value = "开始时间")

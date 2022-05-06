@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 
 /**
  * @author : pcf
@@ -17,4 +19,8 @@ public class MySeckillVO {
     private Long productId;
     @ApiModelProperty(value = "产品名称",example = "产品1")
     private String productName;
+//    @ApiModelProperty(value = "银行卡号", example = "12312412412412")
+//    private String accountNum;
+//    @ApiModelProperty(value = "支付密码", example = "123")
+//    private  String payPassword;
 }

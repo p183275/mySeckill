@@ -6,6 +6,8 @@ package com.feng.seckill.entitys.constant;
  */
 public class TokenConstant {
 
+    // 小时
+    public static final int TOKEN_EXPIRE_TIME = 24;
     public static final String TOKEN = "_TOKEN";
 
     public enum DurationTime{

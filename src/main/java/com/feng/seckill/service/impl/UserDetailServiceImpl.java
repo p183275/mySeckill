@@ -8,6 +8,10 @@ import com.feng.seckill.mapper.UserLoginMapper;
 import com.feng.seckill.security.SecurityUser;
 import com.feng.seckill.service.FirstFilterService;
 import com.feng.seckill.service.SeckillRuleService;
+import com.feng.seckill.service.rabbitMq.WriteDBProducerService;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.impl.conn.Wire;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +25,7 @@ import java.util.List;
  * @author : pcf
  * @date : 2022/1/15 17:37
  */
+@Slf4j
 @Service("userDetailsService")
 public class UserDetailServiceImpl implements UserDetailsService {
 
@@ -30,7 +35,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private SeckillRuleService seckillRuleService;
     @Autowired
     private FirstFilterService firstFilterService;
+    @Autowired
+    private WriteDBProducerService writeDBProducerService;
 
+    @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String loginAccount) throws UsernameNotFoundException {
 
@@ -50,9 +58,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
         userVO.setHasPermission(permission);
 
         // TODO 开发期间先关闭
-        // 将初筛信息放入数据库
-//        String passStatus = permission ? FirstFilterConstant.FilterStatus.PASS.getCode()
-//                : FirstFilterConstant.FilterStatus.NOT_PASS.getCode();
+//         将初筛信息放入数据库
+        String passStatus = permission ? FirstFilterConstant.FilterStatus.PASS.getCode()
+                : FirstFilterConstant.FilterStatus.NOT_PASS.getCode();
+        writeDBProducerService.writeFirstFilter(userVO.getUserId(), userVO.getName(), passStatus);
+
 //        firstFilterService.addRecordsByUser(userVO.getUserId(), userVO.getName(), passStatus);
 
         // 放置数据

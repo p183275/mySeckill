@@ -1,6 +1,9 @@
 package com.feng.seckill.security;
 
 import com.feng.seckill.entitys.vo.UserVO;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,7 +60,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return currentUserInfo.getPassword();
+        return currentUserInfo.getPassword() + "_" + currentUserInfo.getLoginAccount();
     }
 
     @Override
@@ -83,4 +87,5 @@ public class SecurityUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

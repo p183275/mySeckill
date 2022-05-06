@@ -1,5 +1,6 @@
 package com.feng.seckill.schedule;
 
+import com.feng.seckill.service.PersonalService;
 import com.feng.seckill.service.SeckillProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,15 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductScheduleService {
 
     @Autowired
-    private SeckillProductService seckillProductService;
+    private PersonalService personalService;
 
-    /**
-     * 定时更新产品数量
-     */
-    @Scheduled(cron = "0/1 * * * * ? ")
-    public void reflashProductNumSchedule(){
-        System.out.println("更新产品数量");
-        seckillProductService.reflashProductionNumber();
+    @Scheduled(cron = "0 50 23 ? * *")
+    public void reflashBlackTable(){
+        personalService.reflashBlackNames();
     }
 
 }

@@ -3,6 +3,7 @@ package com.feng.seckill.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.feng.seckill.entitys.po.BreakRulePO;
 import com.feng.seckill.entitys.result.CommonResult;
+import com.feng.seckill.entitys.vo.BreakRuleDescVO;
 import com.feng.seckill.entitys.vo.BreakRuleVO;
 import com.feng.seckill.entitys.vo.HelpPage;
 import com.feng.seckill.service.BreakRuleService;
@@ -72,4 +73,14 @@ public class BreakRuleController {
         return new CommonResult<>(200, "成功");
     }
 
+    @GetMapping("/get/desc")
+    @ApiOperation(value = "根据 ruleId 和 recordId 拿到对应的违规详情", httpMethod = "GET")
+    public CommonResult<BreakRuleDescVO> getDesc(
+            @ApiParam(value = "对应的规则id", name = "ruleId", example = "1")
+                @RequestParam(value = "ruleId") Long ruleId,
+            @ApiParam(value = "对应的记录id", name = "recordId", example = "1")
+                @RequestParam(value = "recordId") Long recordId){
+        BreakRuleDescVO des = breakRuleService.getDes(ruleId, recordId);
+        return new CommonResult<>(200, "成功", des);
+    }
 }

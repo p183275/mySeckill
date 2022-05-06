@@ -5,14 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.feng.seckill.entitys.constant.BreakRuleConstant;
 import com.feng.seckill.entitys.constant.ExceptionConstant;
-import com.feng.seckill.entitys.po.BreakRulePO;
-import com.feng.seckill.entitys.po.SeckillRulePO;
-import com.feng.seckill.entitys.po.UserPO;
+import com.feng.seckill.entitys.po.*;
+import com.feng.seckill.entitys.vo.BreakRuleDescVO;
 import com.feng.seckill.entitys.vo.BreakRuleVO;
 import com.feng.seckill.entitys.vo.HelpPage;
-import com.feng.seckill.mapper.BreakRuleMapper;
-import com.feng.seckill.mapper.SeckillRuleMapper;
-import com.feng.seckill.mapper.UserInfoMapper;
+import com.feng.seckill.entitys.vo.SeckillRuleVO;
+import com.feng.seckill.mapper.*;
 import com.feng.seckill.service.BreakRuleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,10 @@ public class BreakRuleServiceImpl extends ServiceImpl<BreakRuleMapper, BreakRule
     private UserInfoMapper userInfoMapper;
     @Autowired
     private SeckillRuleMapper seckillRuleMapper;
+    @Autowired
+    private CreditMapper creditMapper;
+    @Autowired
+    private OverdueRecordMapper overdueRecordMapper;
 
     /**
      * 检索分页查询
@@ -138,5 +140,30 @@ public class BreakRuleServiceImpl extends ServiceImpl<BreakRuleMapper, BreakRule
 
         // 删除
         breakRuleMapper.deleteBatchIds(breakIdList);
+    }
+
+    @Override
+    public BreakRuleDescVO getDes(Long ruleId, Long recordId) {
+
+        // 创建对象
+        BreakRuleDescVO breakRuleDesc = new BreakRuleDescVO();
+
+        // 查询 规则 信息
+        SeckillRulePO seckillRulePO = seckillRuleMapper.selectById(ruleId);
+        SeckillRuleVO seckillRuleVO = new SeckillRuleVO();
+        // 复制属性
+        BeanUtils.copyProperties(seckillRulePO, seckillRuleVO);
+        breakRuleDesc.setRuleVO(seckillRuleVO);
+
+        // 如果是 逾期记录
+        if (ruleId.equals(BreakRuleConstant.RuleType.OVERDUE.getRuleType())){
+            OverdueRecordPO overdueRecordPO = overdueRecordMapper.selectById(recordId);
+            breakRuleDesc.setInfo(overdueRecordPO);
+
+        }else if (ruleId.equals(BreakRuleConstant.RuleType.CREDIT.getRuleType())){ // 如果是失信记录
+            CreditPO creditPO = creditMapper.selectById(recordId);
+            breakRuleDesc.setInfo(creditPO);
+        }
+        return breakRuleDesc;
     }
 }

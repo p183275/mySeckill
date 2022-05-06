@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.seckill.mapper.BankInfoMapper">
+    <update id="incBankAccount">
+        UPDATE t_bank_info SET bank_account = bank_account + #{money}
+        WHERE bank_id = 1
+    </update>
+    <update id="updateBankAccount">
+        UPDATE t_bank_info SET bank_account = #{bankAccount}
+        WHERE bank_id = 1
+    </update>
+</mapper>

@@ -1,16 +1,71 @@
+#server:
+#  port: 8888
+#spring:
+#  # 配置数据源
+## 开发环境
+#  datasource:
+#    url: jdbc:mysql://localhost:3307/sxfcds2103297?serverTimezone=GMT%2b8
+##    url: jdbc:mysql://localhost:3306/seckill?serverTimezone=GMT%2b8
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: sxfcds2103297
+#    password: SX_fcds2103297
+#    type: com.alibaba.druid.pool.DruidDataSource
+#
+##   redis 配置文件
+#  redis:
+#    sentinel:
+#      master: mymaster
+#      nodes:
+#        - 192.168.131.129:26379
+#        - 192.168.131.129:26380
+#        - 192.168.131.129:26381
+#    timeout: 5000
+#
+#  rabbitmq:
+#    addresses: 192.168.131.129
+#    host: 5672
+#    username: admin
+#    password: pcf123
+#    publisher-confirm-type: correlated
+#    publisher-returns: true
+
+# 测试环境
 server:
-  port: 8888
+  port: 8080
 spring:
-  # 配置数据源
   datasource:
-    url: jdbc:mysql://localhost:3306/seckill?serverTimezone=GMT%2b8
+    url: jdbc:mysql://172.31.32.233:3306/sxfcds2103297?serverTimezone=GMT%2b8
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 123456
+    username: sxfcds2103297
+    password: SX_fcds2103297
     type: com.alibaba.druid.pool.DruidDataSource
+# redis 测试环境
   redis:
-    host: 192.168.131.129 # redis的ip地址
-    database: 1
+    sentinel:
+      master: mymaster
+      nodes:
+        - 127.0.0.1:26380
+        - 127.0.0.1:26381
+        - 127.0.0.1:26382
+    timeout: 5000
+#   rabbitmq 测试环境
+  rabbitmq:
+    addresses: localhost
+    host: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
+#
+  # 短信接口配置文件
+  alicloud:
+    sms:
+      host: https://dfsns.market.alicloudapi.com
+      path: /data/send_sms
+      method: POST
+      appcode: 0da1f75bcc474c18b09019fc63517b7c
+      template: TPL_0001
+
   # 设置时区格式
   jackson:
     time-zone: GMT+08:00
@@ -24,4 +79,6 @@ mybatis-plus:
       id-type: auto
       logic-delete-value: 1
       logic-not-delete-value: 0
-
+#logging:
+#  level:
+#    com.feng.seckill.service.impl: debug

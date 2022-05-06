@@ -28,6 +28,9 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -126,6 +129,9 @@ public class SeckillRuleServiceImpl extends ServiceImpl<SeckillRuleMapper, Secki
         if (ruleIdList.isEmpty())
             throw new RuntimeException(ExceptionConstant.DATA_NOT_NULL_EXCEPTION);
 
+        // 删除缓存中正在生效的规则
+        redisTemplate.delete(RedisConstant.EFFECT_RULES);
+
         seckillRuleMapper.deleteBatchIds(ruleIdList);
     }
 
@@ -162,7 +168,7 @@ public class SeckillRuleServiceImpl extends ServiceImpl<SeckillRuleMapper, Secki
      * @return false true
      */
     @Override
-    public boolean getPermissionByUserId(UserPO userPO) {
+    public boolean getPermissionByUserId(UserPO userPO) throws ExecutionException, InterruptedException {
 
         // 从redis中获取对象
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
@@ -228,13 +234,21 @@ public class SeckillRuleServiceImpl extends ServiceImpl<SeckillRuleMapper, Secki
                     queryWrapper.eq("rule_status", SeckillRuleConstant.RuleStatus.EFFECT.getCode());
                     List<SeckillRulePO> seckillRulePOS = seckillRuleMapper.selectList(queryWrapper);
 
+                    // 过滤掉 说明中的 "-"
+                    List<SeckillRulePO> ruleCollect = seckillRulePOS.stream().peek(item -> {
+                        // 创建对象
+                        String ruleContent = item.getRuleContent();
+                        String newRuleContent = ruleContent.replace("-", "");
+                        item.setRuleContent(newRuleContent);
+                    }).collect(Collectors.toList());
+
                     // 传为json字符串并存入redis
-                    String jsonString = JSON.toJSONString(seckillRulePOS);
+                    String jsonString = JSON.toJSONString(ruleCollect);
                     // 设置规则过期时间为15分钟
                     operations.set(RedisConstant.EFFECT_RULES, jsonString,
                             RedisConstant.EFFECT_RULES_EXPIRED_TIME, TimeUnit.MINUTES);
 
-                    return seckillRulePOS;
+                    return ruleCollect;
                 }
                 // 如果有
                 return JSON.parseObject(rulesFromRedis2, new TypeReference<List<SeckillRulePO>>(){});
@@ -321,37 +335,11 @@ public class SeckillRuleServiceImpl extends ServiceImpl<SeckillRuleMapper, Secki
     /******************************************************************************************************
      *************************************    方法    ******************************************************
      ******************************************************************************************************/
-    public boolean judge(Set<Long> ruleSet, UserPO userPO){
+    public boolean judge(Set<Long> ruleSet, UserPO userPO) throws ExecutionException, InterruptedException {
 
-        Long userId = userPO.getUserId();
-
-        // 通过userId查询破坏的规则
-        List<Long> userIdList = breakRuleMapper.getRuleIdListByUserId(userId);
-
-        // 如果为空则直接有资格
-        if (userIdList.isEmpty()) return true;
-
-//        // 遍历进行判断
-//        for (Long item : userIdList){
-//            // 如果由则不合格
-//            if (ruleSet.contains(item)) return false;
-//        }
-
-        // TODO 运行真正的判断逻辑
-        for (Long ruleId : ruleSet){
-            if (ruleId == 1){
-                if (!riskyDecisionEngineService.overdueFilter(userId)) return false;
-            }else if (ruleId == 3){
-                if (!riskyDecisionEngineService.workStatusFilter(userPO)) return false;
-            }else if (ruleId == 4){
-                if (!riskyDecisionEngineService.defaulterFilter(userId)) return false;
-            }else if (ruleId == 5){
-                if (!riskyDecisionEngineService.ageFilter(userPO)) return false;
-            }
-        }
-
+        // TODO 异步请求方式
         // 通过层层筛选返回true
-        return true;
+        return riskyDecisionEngineService.judgeByAsc(ruleSet, userPO);
     }
 
     public Map<String, String> transformOverdueConfigToMap(OverdueConfig config){

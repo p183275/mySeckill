@@ -6,15 +6,18 @@ import com.feng.seckill.entitys.po.UserPO;
 import com.feng.seckill.entitys.result.CommonResult;
 import com.feng.seckill.entitys.vo.HelpPage;
 import com.feng.seckill.entitys.vo.SeckillProductVO;
+import com.feng.seckill.entitys.vo.UserInfoAndAccountVO;
 import com.feng.seckill.entitys.vo.UserVO;
 import com.feng.seckill.service.UserInfoService;
 import com.feng.seckill.service.UserLoginService;
+import com.feng.seckill.util.JWTUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -65,4 +68,15 @@ public class UserInfoController {
         return new CommonResult<>(200, "成功");
     }
 
+    @GetMapping(value = "/get/all/info")
+    @ApiOperation(value = "拿到用户所有信息，包括账户", httpMethod = "GET")
+    public CommonResult<UserInfoAndAccountVO> getUser(
+//            @ApiParam(value = "通过 id 拿到用户所有信息", example = "1")
+//            @RequestParam(value = "userId") Long userId,
+            HttpServletRequest request){
+        String token = request.getHeader("token");
+        String userId = JWTUtils.verify(token).getClaim("userId").asString();
+        UserInfoAndAccountVO allInfo = userInfoService.getAllInfo(Long.parseLong(userId));
+        return new CommonResult<>(200, "成功", allInfo);
+    }
 }

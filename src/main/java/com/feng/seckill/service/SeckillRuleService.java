@@ -9,6 +9,7 @@ import com.feng.seckill.entitys.vo.SeckillRuleVO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author : pcf
@@ -52,7 +53,7 @@ public interface SeckillRuleService extends IService<SeckillRulePO> {
      * @param userPO 用户信息封装类
      * @return false or true
      */
-    boolean getPermissionByUserId(UserPO userPO);
+    boolean getPermissionByUserId(UserPO userPO) throws ExecutionException, InterruptedException;
 
     /**
      * 并发请求拿到秒杀活动的规则

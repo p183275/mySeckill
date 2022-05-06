@@ -7,6 +7,8 @@ import com.feng.seckill.entitys.vo.SeckillProductVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author : pcf
  * @date : 2022/1/16 15:41
@@ -21,4 +23,5 @@ public interface SeckillProductMapper extends BaseMapper<SeckillProductPO> {
      * @param productId 产品id
      */
     void letProductionZero(@Param("productId") Long productId);
+
 }

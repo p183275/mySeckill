@@ -3,6 +3,7 @@ package com.feng.seckill.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.feng.seckill.entitys.po.BreakRulePO;
+import com.feng.seckill.entitys.vo.BreakRuleDescVO;
 import com.feng.seckill.entitys.vo.BreakRuleVO;
 import com.feng.seckill.entitys.vo.HelpPage;
 
@@ -40,5 +41,13 @@ public interface BreakRuleService extends IService<BreakRulePO> {
      * @param breakIdList 主键
      */
     void deleteBreakRuleRecord(List<Long> breakIdList);
+
+    /**
+     * 通过 ruleId 确定查询哪种违规记录的详情
+     * @param ruleId 规则 id
+     * @param recordId 记录 id
+     * @return 违规详情
+     */
+    BreakRuleDescVO getDes(Long ruleId, Long recordId);
 
 }
